@@ -1,0 +1,80 @@
+// DATA STRUCTURE CODE 
+package Activity3;
+import java.util.LinkedList;
+import javax.swing.JTextArea;
+
+class Item {
+    String name;
+    double price;
+
+    Item(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+}
+
+class ShoppingCart {
+    LinkedList<Item> cart;
+
+    ShoppingCart() {
+        cart = new LinkedList<>();
+    }
+
+    void addItem(String name) {
+        double price = autoPrice(name);
+        if (price == 0) {
+            System.out.println("No item found for: " + name);
+        } else {
+            cart.add(new Item(name, price));
+            System.out.println(name + " added to the cart with price ₱" + price);
+        }
+    }
+
+    double autoPrice(String name) {
+        switch (name.toLowerCase()) {
+            case "apple":
+                return 70.00;
+            case "banana":
+                return 60.50;
+            case "orange":
+                return 80.75;
+            case "milk":
+                return 60.50;
+            case "bread":
+                return 60.00;
+            default:
+                return 0; // Return 0 to indicate that the item is not found
+        }
+    }
+
+    void displayItemsInTextArea(JTextArea textArea) {
+        if (cart.isEmpty()) {
+            textArea.append("Your cart is empty.\n");
+            return;
+        }
+
+        textArea.append("Items in your cart:\n");
+        for (Item item : cart) {
+            textArea.append(item.name + ": ₱" + item.price + "\n");
+        }
+    }
+
+    void checkoutInTextArea(JTextArea textArea) {
+        if (cart.isEmpty()) {
+            textArea.append("Your cart is empty.\n");
+            return;
+        }
+
+        double total = 0;
+        textArea.append("Items in your cart:\n");
+        for (Item item : cart) {
+            textArea.append(item.name + ": ₱" + item.price + "\n");
+            total += item.price;
+        }
+        textArea.append("Total: ₱" + total + "\n");
+
+        cart.clear(); // Clear the cart after checkout
+        textArea.append("Thank you for your purchase! Your cart is now empty.\n");
+    }
+}
+
