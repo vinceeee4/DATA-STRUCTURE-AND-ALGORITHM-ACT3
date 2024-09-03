@@ -62,17 +62,16 @@ public class LoginForm extends JFrame {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
 
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(LoginForm.this, "Please enter both username and password.");
-            } else if (validateCredentials(username, password)) {
-                // Proceed to shopping cart GUI
-                new ShoppingCartGUI().setVisible(true);
-                dispose(); // Close login form
+            User user = validateCredentials(username, password);
+            if (user != null) {
+                new ShoppingCartGUI(user).setVisible(true);
+                dispose(); // Close the login form
             } else {
                 JOptionPane.showMessageDialog(LoginForm.this, "Invalid username or password.");
             }
         }
     }
+
 
     private class SignUpAction implements ActionListener {
         @Override
@@ -82,20 +81,23 @@ public class LoginForm extends JFrame {
         }
     }
 
-    private boolean validateCredentials(String username, String password) {
+    private User validateCredentials(String username, String password) {
         try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2 && parts[0].equals(username) && parts[1].equals(password)) {
-                    return true;
+                    return new User(username, password); // Return the User object if credentials match
                 }
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(LoginForm.this, "Error reading user data.");
         }
-        return false;
+        return null; // Return null if no match is found
     }
+    
+  
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
