@@ -10,13 +10,15 @@ public class ShoppingCartGUI extends JFrame {
     private JTextArea textArea;
     private JTextField itemNameField;
 
-    public ShoppingCartGUI() {
-        cart = new ShoppingCart();
-        setTitle("Shopping Cart Application");
-        setSize(800, 600); // Size for the window
+    public ShoppingCartGUI(User user) {
+        
+        
+        this.cart = user.cart; // Link the cart to the current user
+        setTitle(user.username + "'s Shopping Cart");
+        setSize(500, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
+        
         // Create components
         itemNameField = new JTextField(20);
         JButton addButton = new JButton("Add Item");
@@ -66,20 +68,21 @@ public class ShoppingCartGUI extends JFrame {
         add(controlPanel, BorderLayout.SOUTH);
     }
 
-    // Action Listener Classes
+  
+    
     private class AddItemAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             String itemName = itemNameField.getText().trim();
             if (!itemName.isEmpty()) {
-                cart.addItem(itemName);
+                cart.addItem(itemName, textArea);
                 itemNameField.setText("");
-                JOptionPane.showMessageDialog(ShoppingCartGUI.this, itemName + " added to cart.");
             } else {
                 JOptionPane.showMessageDialog(ShoppingCartGUI.this, "Please enter an item name.");
             }
         }
     }
+
 
     private class CheckCartAction implements ActionListener {
         @Override
@@ -105,13 +108,5 @@ public class ShoppingCartGUI extends JFrame {
                 System.exit(0);
             }
         }
-    }
-
-    // Main Method
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ShoppingCartGUI gui = new ShoppingCartGUI();
-            gui.setVisible(true);
-        });
     }
 }
